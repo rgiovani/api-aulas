@@ -12,20 +12,20 @@ let currentUserId = ''
 
 describe('Testing successful returns on users routes', () => {
     it('should test if its READING and Returning an ARRAY with STATUS 200', async () => {
+        jest.setTimeout(10000)
+
         const res = await supertest(app).get('/users')
         currentUsersLength = res.body.length
 
         expect(res.statusCode).toEqual(200)
         expect(Array.isArray(res.body)).toEqual(true)
-
-        jest.setTimeout(10000)
     })
 
     it('should test if user are being CREATED and returning ID with STATUS 200', async () => {
         const res = await supertest(app).post('/users')
             .send({
-                name: "Ronaldo",
-                surname: "Giovani",
+                name: "novo",
+                surname: "usuario",
                 teacher: true
             })
 
@@ -67,7 +67,7 @@ describe('Testing successful returns on users routes', () => {
 })
 
 describe('Testing Bad Requests (POST) on users Routes', () => {
-    it('should test if STATUS 400 are being thrown when NAME is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field NAME is missing', async () => {
         const res = await supertest(app).post('/users')
             .send({
                 surname: "Giovani",
@@ -76,7 +76,7 @@ describe('Testing Bad Requests (POST) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
-    it('should test if STATUS 400 are being thrown when SURNAME is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field SURNAME is missing', async () => {
         const res = await supertest(app).post('/users')
             .send({
                 name: "Ronaldo",
@@ -85,7 +85,7 @@ describe('Testing Bad Requests (POST) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
-    it('should test if STATUS 400 are being thrown when TEACHER is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field TEACHER is missing', async () => {
         const res = await supertest(app).post('/users')
             .send({
                 name: "Ronaldo",
@@ -127,7 +127,7 @@ describe('Testing Bad Requests (POST) on users Routes', () => {
 
 describe('Testing Bad Requests (PUT) on users Routes', () => {
     let currentUserId = ''
-    it('should test if STATUS 400 are being thrown when ID is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field ID is missing', async () => {
         const userCreatedRes = await supertest(app).post('/users')
             .send({
                 name: "Ronaldo",
@@ -140,7 +140,7 @@ describe('Testing Bad Requests (PUT) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
-    it('should test if STATUS 400 are being thrown when NAME is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field NAME is missing', async () => {
         const res = await supertest(app).put('/users')
             .send({
                 _id: currentUserId
@@ -148,7 +148,7 @@ describe('Testing Bad Requests (PUT) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
-    it('should test if STATUS 400 are being thrown when SURNAME is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field SURNAME is missing', async () => {
         const res = await supertest(app).post('/users')
             .send({
                 _id: currentUserId,
@@ -157,7 +157,7 @@ describe('Testing Bad Requests (PUT) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
-    it('should test if STATUS 400 are being thrown when TEACHER is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field TEACHER is missing', async () => {
         const res = await supertest(app).post('/users')
             .send({
                 _id: currentUserId,
@@ -176,7 +176,7 @@ describe('Testing Bad Requests (PUT) on users Routes', () => {
 })
 
 describe('Testing Bad Requests (Delete) on users Routes', () => {
-    it('should test if STATUS 400 are being thrown when ID is missing', async () => {
+    it('should test if STATUS 400 are being thrown when field ID is missing', async () => {
         const res = await supertest(app).del('/users')
             .send({})
         expect(res.statusCode).toEqual(400)
