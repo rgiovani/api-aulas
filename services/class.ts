@@ -18,7 +18,11 @@ const findAll = async (query?: any) => {
 const findById = async (id: string) => {
     await connect()
     verifyFields(id, ['id'])
-    return await ClassModel.findOne({ _id: id })
+    const classFounded = await ClassModel.findOne({ _id: id })
+    if (!classFounded)
+        throw new Error('Aula nao encontrada...')
+
+    return classFounded
 }
 
 const findOneWithMoreStars = async () => {
