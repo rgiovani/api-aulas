@@ -23,7 +23,7 @@ const findById = async (id: string) => {
 
 const findOneWithMoreStars = async () => {
     await connect()
-    return await ClassModel.find().sort("-stars").limit(1)
+    return (await ClassModel.find().sort("-stars").limit(1))[0]
 }
 
 const findAndOrderByStars = async (query?: any) => {
@@ -133,6 +133,8 @@ const increaseStar = async (classId: string, userId: string, amount: number) => 
             usersWhoVoted: { user: userFounded, stars: amount }
         },
     })
+
+    return true
 }
 
 const create = async (newClass: IClass) => {
@@ -150,9 +152,9 @@ const create = async (newClass: IClass) => {
 }
 
 const update = async (newClass: IClass) => {
-    const { _id, title, description, teacherId, stars } = newClass
+    const { _id, title, description, teacherId } = newClass
 
-    verifyFields(newClass, ['_id', 'title', 'description', 'teacherId', 'stars'])
+    verifyFields(newClass, ['_id', 'title', 'description', 'teacherId'])
 
     await connect()
     const verifyId = await isIdValid(_id)

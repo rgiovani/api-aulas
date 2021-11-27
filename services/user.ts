@@ -8,6 +8,11 @@ const findAll = async () => {
     return await UserModel.find()
 }
 
+const findAllNonTeachers = async () => {
+    await connect()
+    return await UserModel.find({ teacher: false })
+}
+
 const create = async (user: IUser) => {
     await connect()
     verifyFields(user, ['name', 'surname', 'teacher'])
@@ -89,5 +94,6 @@ export {
     create,
     removeById,
     update,
-    becomeTeacher
+    becomeTeacher,
+    findAllNonTeachers
 }

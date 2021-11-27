@@ -33,7 +33,6 @@ describe('Testing successful returns on users routes', () => {
         currentUserId = res.body
         expect(res.statusCode).toEqual(200)
         expect(typeof res.body).toEqual('string')
-        expect(result.body.length).toEqual(currentUsersLength)
     })
 
     it('should test if user are being UPDATED and returning TRUE with STATUS 200', async () => {
@@ -49,6 +48,35 @@ describe('Testing successful returns on users routes', () => {
         expect(res.body).toEqual(true)
     })
 
+    it('should test if user are becoming teacher', async () => {
+        const res = await supertest(app).put('/users/becomeTeacher')
+            .send({
+                userId: currentUserId
+            })
+
+        const resUserNotFound = await supertest(app).put('/users/becomeTeacher')
+            .send({
+                userId: '619fe3a87832e9827bc13d6a'
+            })
+
+        const resUserInvalid = await supertest(app).put('/users/becomeTeacher')
+            .send({
+                userId: 123
+            })
+
+        const resAlreadyIsTeacher = await supertest(app).put('/users/becomeTeacher')
+            .send({
+                userId: currentUserId
+            })
+
+        expect(res.statusCode).toEqual(200)
+        expect(res.body).toEqual(true)
+
+        expect(resUserNotFound.statusCode).toEqual(400)
+        expect(resUserInvalid.statusCode).toEqual(400)
+        expect(resAlreadyIsTeacher.statusCode).toEqual(400)
+    })
+
 
     it('should test if user are being DELETED and returning TRUE with STATUS 200', async () => {
         const res = await supertest(app).del('/users')
@@ -61,7 +89,6 @@ describe('Testing successful returns on users routes', () => {
 
         expect(res.statusCode).toEqual(200)
         expect(res.body).toEqual(true)
-        expect(result.body.length).toEqual(currentUsersLength)
     })
 })
 
@@ -139,6 +166,19 @@ describe('Testing Bad Requests (PUT) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
+    it('should test if STATUS 400 are being thrown when field ID is invalid or NotFound', async () => {
+        const resInvalidId = await supertest(app).put('/users')
+            .send({
+                _id: 123,
+                name: "Leonardo",
+                surname: "Oliveira",
+                teacher: "61a0686f44b6046e0341f9f8"
+            })
+
+
+        expect(resInvalidId.statusCode).toEqual(400)
+    })
+
     it('should test if STATUS 400 are being thrown when field NAME is missing', async () => {
         const res = await supertest(app).put('/users')
             .send({
@@ -181,10 +221,16 @@ describe('Testing Bad Requests (Delete) on users Routes', () => {
         expect(res.statusCode).toEqual(400)
     })
 
+    it('should test if STATUS 400 are being thrown when field ID is invalid', async () => {
+        const res = await supertest(app).del('/users')
+            .send({ id: 0 })
+        expect(res.statusCode).toEqual(400)
+    })
+
     it('should test if STATUS 400 are being thrown when user doesnt exists', async () => {
         const res = await supertest(app).del('/users')
             .send({
-                _id: 'aa'
+                id: '61a134afe25628ef2b514aa1'
             })
 
         expect(res.statusCode).toEqual(400)

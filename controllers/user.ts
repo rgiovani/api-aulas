@@ -8,6 +8,10 @@ const getAll = async (req: Request<any>, res: Response<any>) => {
     return handleRoute(req, res, userService.findAll)
 }
 
+const getAllNonTeachers = async (req: Request<any>, res: Response<any>) => {
+    return handleRoute(req, res, userService.findAllNonTeachers)
+}
+
 const create = async (req: Request<any>, res: Response<any>) => {
     return handleRoute(req, res, userService.create, req.body)
 }
@@ -26,6 +30,7 @@ const becomeTeacher = async (req: Request<any>, res: Response<any>) => {
 
 export {
     getAll,
+    getAllNonTeachers,
     create,
     update,
     deleteById,

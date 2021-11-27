@@ -2,7 +2,7 @@ interface IClass {
     _id?: string,
     title: string,
     description: string,
-    stars: number,
+    stars?: number,
     teacherId: string
 }
 
