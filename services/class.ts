@@ -163,14 +163,21 @@ const update = async (newClass: IClass) => {
     await connect()
     const verifyId = await isIdValid(_id)
 
+    const user = await UserModel.findOne({ _id: teacherId })
+
+    if (!user?.teacher) {
+        throw new Error(`Nenhum professor encontrado com o ID: ${teacherId}`)
+    }
+
     if (!verifyId)
         throw new Error('O ID não é válido')
 
-    const classUpdated = await ClassModel.findOneAndUpdate({ _id: _id, teacher: teacherId }, newClass)
+    const classFounded = await ClassModel.findOne({ _id: _id })
 
-    if (!classUpdated) {
-        throw new Error(`Nenhuma aula com o id: ${classUpdated._id} do professor: ${classUpdated.teacher} encontrada`)
-    }
+    if (!classFounded)
+        throw new Error('Nenhuma aula encontrada com este ID')
+
+    await ClassModel.findOneAndUpdate({ _id: _id, teacher: teacherId }, newClass)
 
     return true
 }
@@ -185,6 +192,8 @@ const removeById = async (id: string) => {
         throw new Error('O ID não é válido')
 
     const classRemoved = await ClassModel.findByIdAndRemove(id)
+
+    await UserFavoriteClassModel.deleteMany({ classId: id })
 
     if (!classRemoved)
         throw new Error(`Nenhuma aula encontrada com o id: ${id}`)
