@@ -185,6 +185,15 @@ DELETE
         }
         ```
 
+- #### **(DEL) /classes/removeFav**
+    - #### Remove uma aula favorita do usuario, retorna TRUE
+    - (body) : 
+         ``` 
+        {
+            "userId": "619fe3a87832e9827bc13d6a",
+            "classId": "61a2955d0efc2ecd22440d5b"
+        }
+        ```
 
 PUT
 
