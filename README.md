@@ -7,8 +7,8 @@ npm start
 
 ## Para rodar os testes digite:
  ```
-npm test 
-npm test:cov
+npm run test 
+npm run test:cov
  ```
 
 ### Sobre a API:
