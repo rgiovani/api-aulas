@@ -17,9 +17,30 @@ const classSchema = new mongoose.Schema({
     stars: {
         type: Number,
         require: true
+    },
+    usersWhoVoted: {
+        type: [
+            {
+                user: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'user'
+                },
+                stars: {
+                    type: Number,
+                    require: true
+                },
+            }
+        ],
+        default: []
     }
-})
+}, { timestamps: true })
 
-const ClassModel = mongoose.model('class', classSchema)
+classSchema.index(
+    {
+        title: 'text'
+    },
+)
+
+const ClassModel = mongoose.model('classes', classSchema)
 
 export { ClassModel }

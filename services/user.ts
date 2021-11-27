@@ -1,5 +1,6 @@
+import { connect, isIdValid } from '../utils/mongodb'
+import { verifyFields } from '../utils/validate'
 import { UserModel } from '../models/user'
-import { connect } from '../utils/mongodb'
 import { IUser } from '../types/IUser'
 
 const findAll = async () => {
@@ -9,15 +10,7 @@ const findAll = async () => {
 
 const create = async (user: IUser) => {
     await connect()
-
-    if (!user.name)
-        throw new Error('Informe o campo name')
-
-    if (!user.surname)
-        throw new Error('Informe o campo surname')
-
-    if (user.teacher === undefined)
-        throw new Error('Informe o campo teacher')
+    verifyFields(user, ['name', 'surname', 'teacher'])
 
     const userFounded = await UserModel.findOne({ name: user.name, surname: user.surname })
 
@@ -31,8 +24,12 @@ const create = async (user: IUser) => {
 const removeById = async (id: string) => {
     await connect()
 
-    if (!id)
-        throw new Error('Informe o campo id')
+    verifyFields(id, ['id'])
+
+    const verifyId = await isIdValid(id)
+
+    if (!verifyId)
+        throw new Error('O ID não é válido')
 
     const userRemoved = await UserModel.findByIdAndRemove(id)
     if (!userRemoved) {
@@ -43,17 +40,13 @@ const removeById = async (id: string) => {
 }
 
 const update = async (user: IUser) => {
-    if (!user._id)
-        throw new Error("Informe o campo _id!")
 
-    if (!user.name)
-        throw new Error('Informe o campo name')
+    verifyFields(user, ['_id', 'name', 'surname', 'teacher'])
 
-    if (!user.surname)
-        throw new Error('Informe o campo surname')
+    const verifyId = await isIdValid(user._id)
 
-    if (user.teacher === undefined)
-        throw new Error('Informe o campo teacher')
+    if (!verifyId)
+        throw new Error('O ID não é válido')
 
     await connect()
 
@@ -66,9 +59,35 @@ const update = async (user: IUser) => {
     return true
 }
 
+const becomeTeacher = async (userId: string) => {
+    const verifyId = await isIdValid(userId)
+
+    if (!verifyId)
+        throw new Error('O ID não é válido, informe outro ID')
+
+    await connect()
+
+    const user = await UserModel.findOne({ _id: userId })
+
+    if (!user) {
+        throw new Error(`Nenhum usuario encontrado com o id: ${userId}`)
+    }
+
+    if (user.teacher) {
+        throw new Error(`O usuario com o id: ${userId} ja e um professor`)
+    }
+
+    user.teacher = true
+
+    await UserModel.findOneAndUpdate({ _id: userId }, user)
+
+    return true
+}
+
 export {
     findAll,
     create,
     removeById,
-    update
+    update,
+    becomeTeacher
 }

@@ -1,5 +1,5 @@
-
 import supertest from "supertest"
+
 import { app } from "../server"
 import { disconnect } from "../utils/mongodb"
 
@@ -12,7 +12,6 @@ let currentUserId = ''
 
 describe('Testing successful returns on users routes', () => {
     it('should test if its READING and Returning an ARRAY with STATUS 200', async () => {
-        jest.setTimeout(10000)
 
         const res = await supertest(app).get('/users')
         currentUsersLength = res.body.length

@@ -3,7 +3,7 @@ interface IClass {
     title: string,
     description: string,
     stars: number,
-    teacher: string
+    teacherId: string
 }
 
 export {
